@@ -16,14 +16,16 @@ class VoidEntitySystem extends EntitySystem
 	}
 	
 	@final
-	override public function processEntities( entitiesToProcess:Iterable<Entity):Void 
+	override public function processEntities( entitiesToProcess:Iterable<Entity>):Void 
 	{
 		processSystem();
 	}
    
-	private function processSystem():Void;
+	private function processSystem():Void
+	{
+		
+	}
 	
-	@final
 	override public function checkProcessing():Bool 
 	{
 		return true;

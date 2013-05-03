@@ -17,6 +17,12 @@ class Entity
 	
 	private var components:Hash<Component>;
 	
+	/**
+	 * Entity constructor. Should be treated as private, and never manually invoked.
+	 * Use myEntityWorld.create();
+	 * @param	id A unique id for this Entity.
+	 */
+	
 	public function new( id:UInt) 
 	{
 		this.id = id;
@@ -26,20 +32,37 @@ class Entity
 		components = new Hash<Component>();
 	}
 	
+	/**
+	 * Deactivate this entity so that it does not get processed by systems.
+	 */
+	
 	public function deactivate():Void
 	{
 		_isActive = false;
 	}
+	
+	/**
+	 * Activate this entity so that it is processed by systems.
+	 */
 	
 	public function activate():Void
 	{
 		_isActive = true;
 	}
 	
+	/**
+	 * Call this everytime you change this entity's components!
+	 */
+	
 	public function update():Void
 	{
 		world.updateEntity( this);
 	}
+	
+	/**
+	 * Add a component if it doesn't exist already.
+	 * @param	component The component to add.
+	 */
 	
 	public function addComponent( component:Component):Void
 	{
@@ -57,10 +80,40 @@ class Entity
 		}
 	}
 	
+	/**
+	 * Get the type of component owned by this entity.
+	 * @param	componentClass The component type you wish to retrieve.
+	 * @return
+	 */
+	
+	public function hasComponent( componentClass:Class<Component>):Bool
+	{
+		var className:String = Type.getClassName( componentClass);
+		
+		return components.exists( className);
+	}
+	
+	public function hasComponentType( component:Component):Bool
+	{
+		var componentClass:Class<Component> = Type.getClass( component);
+		return hasComponent( componentClass);
+	}
+	
+	/**
+	 * Get an iterator of all components owned by this entity.
+	 * @return
+	 */
+	
 	public function getComponentIterator():Iterator<Component>
 	{
 		return components.iterator();
 	}
+	
+	/**
+	 * Get the type of component owned by this entity.
+	 * @param	componentClass The component type you wish to retrieve.
+	 * @return
+	 */
 	
 	public function getComponent( componentClass:Class<Component>):Component
 	{
@@ -76,18 +129,29 @@ class Entity
 		}
 	}
 	
-	public function removeComponent( component:Component):Void
+	/**
+	 * Remove component from this entity.
+	 * @param	component
+	 */
+	
+	public function removeComponent( component:Component, dispose:Bool = true):Void
 	{
 		var componentClass:Class<Component> = Type.getClass( component);
-		removeComponentByClass( componentClass);
+		removeComponentByClass( componentClass, dispose);
 	}
 	
-	public function removeComponentByClass( componentClass:Class<Component>):Void
+	/**
+	 * Removes the component by type of component rather than reference.
+	 * @param	componentClass
+	 */
+	
+	public function removeComponentByClass( componentClass:Class<Component>, dispose:Bool = true):Void
 	{
 		var className:String = Type.getClassName( componentClass);
 		
 		if ( components.exists( className))
 		{
+			if ( dispose) components.get( className)._dispose();
 			components.remove( className);
 			bits.sub( ComponentManager.getType( componentClass).bits);
 		}

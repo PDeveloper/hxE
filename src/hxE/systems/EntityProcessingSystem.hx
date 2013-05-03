@@ -18,7 +18,7 @@ class EntityProcessingSystem extends EntitySystem
 	@final
 	override public function processEntities(entitiesToProcess:Iterable<Entity>):Void 
 	{
-		super.processEntities(entitiesToProcess);
+		for ( e in entitiesToProcess) processEntity( e);
 	}
 	
 	private function processEntity( e:Entity):Void

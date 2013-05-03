@@ -17,10 +17,10 @@ class IntervalProcessingSystem extends IntervalSystem
 	@final
 	override public function processEntities(entitiesToProcess:Iterable<Entity>):Void 
 	{
-		super.processEntities(entitiesToProcess);
+		for ( e in entitiesToProcess) processEntity( e);
 	}
 	
-	private function processEntity( Entity e):Void
+	private function processEntity( e:Entity):Void
 	{
 		
 	}

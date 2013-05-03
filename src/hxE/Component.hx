@@ -12,4 +12,9 @@ class Component
 		
 	}
 	
+	public function _dispose():Void
+	{
+		
+	}
+	
 }

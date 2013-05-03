@@ -5,7 +5,7 @@ import hxE.bits.BitSet;
  * ...
  * @author P Svilans
  */
-class EntitySystem
+class EntitySystem implements IEntitySystem
 {
 	
 	public var world:EntityWorld;
@@ -44,11 +44,21 @@ class EntitySystem
 	@final
 	public function updateEntity( e:Entity):Void
 	{
-		if ( bits.contains( e.bits))
+		if ( e.bits.contains( bits))
 		{
 			if ( !entities.exists( e.id)) addEntity( e);
 		}
 		else if ( entities.exists( e.id))
+		{
+			entities.remove( e.id);
+			onEntityRemoved( e);
+		}
+	}
+	
+	public function clear():Void
+	{
+		var iterator = entities.iterator();
+		for ( e in iterator)
 		{
 			entities.remove( e.id);
 			onEntityRemoved( e);
@@ -99,6 +109,11 @@ class EntitySystem
 	public function checkProcessing():Bool
 	{
 		return true;
+	}
+	
+	public function destroy():Void
+	{
+		
 	}
 	
 }

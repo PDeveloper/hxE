@@ -9,6 +9,10 @@ import de.polygonal.ds.Stack;
 class EntityManager
 {
 	
+	/**
+	 * Pool entities.
+	 */
+	
 	private var freeEnt:Stack<Entity>;
 	private var usedEnt:Stack<Entity>;
 	
@@ -33,6 +37,14 @@ class EntityManager
 		return nid;
 	}
 	
+	public function destroyAll():Void
+	{
+		for ( e in usedEnt)
+		{
+			destroy( e);
+		}
+	}
+	
 	public function create():Entity
 	{
 		var e:Entity;
@@ -53,6 +65,11 @@ class EntityManager
 		return e;
 	}
 	
+	public function getUsedEntities():Array<Entity>
+	{
+		return usedEnt.toArray();
+	}
+	
 	public function destroy( e:Entity):Void
 	{
 		var components = e.getComponentIterator();
@@ -61,6 +78,9 @@ class EntityManager
 		{
 			e.removeComponent( component);
 		}
+		
+		e.update();
+		e.deactivate();
 		
 		usedEnt.remove( e);
 		freeEnt.push( e);

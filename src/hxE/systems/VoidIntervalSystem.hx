@@ -1,20 +1,18 @@
 package hxE.systems;
-import hxE.Demand;
-import hxE.EntitySystem;
 
 /**
  * ...
  * @author P Svilans
  */
-class IntervalSystem extends EntitySystem
+class VoidIntervalSystem extends VoidEntitySystem
 {
 	
 	private var accumulatedTime:Float;
 	private var interval:Float;
 
-	public function new( demand:Demand, interval:Float) 
+	public function new( interval:Float) 
 	{
-		super( demand);
+		super();
 		
 		this.interval = interval;
 		this.accumulatedTime = 0.0;
