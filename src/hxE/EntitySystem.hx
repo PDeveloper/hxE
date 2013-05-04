@@ -8,16 +8,22 @@ import hxE.bits.BitSet;
 class EntitySystem implements IEntitySystem
 {
 	
-	public var world:EntityWorld;
+	private var _world:EntityWorld;
 	
-	private var bits:BitSet;
+	private var _require:BitSet;
+	private var _reject:BitSet;
+	private var demand:Demand;
+	
 	private var entities:IntHash<Entity>;
 	
 	private var isPassive:Bool;
 	
 	public function new( demand:Demand) 
 	{
-		bits = demand.bits;
+		this.demand = demand;
+		_require = new BitSet();
+		_reject = new BitSet();
+		
 		isPassive = false;
 		
 		entities = new IntHash<Entity>();
@@ -44,7 +50,7 @@ class EntitySystem implements IEntitySystem
 	@final
 	public function updateEntity( e:Entity):Void
 	{
-		if ( e.bits.contains( bits))
+		if ( e.bits.contains( _require) && _reject.contains( e.bits))
 		{
 			if ( !entities.exists( e.id)) addEntity( e);
 		}
@@ -115,5 +121,27 @@ class EntitySystem implements IEntitySystem
 	{
 		
 	}
+	
+	private function get_world():EntityWorld 
+	{
+		return _world;
+	}
+	
+	private function set_world(world:EntityWorld):EntityWorld 
+	{
+		if ( world != null)
+		{
+			_require.reset();
+			for ( r in demand._require) _require.add( world.componentManager.getType( r).bits);
+			
+			_reject.reset();
+			_reject.flip();
+			for ( r in demand._reject) _reject.sub( world.componentManager.getType( r).bits);
+		}
+		
+		return _world = world;
+	}
+	
+	public var world(get_world, set_world):EntityWorld;
 	
 }

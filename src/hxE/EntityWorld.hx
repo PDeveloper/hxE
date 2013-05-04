@@ -8,21 +8,58 @@ import de.polygonal.ds.SLL;
 class EntityWorld
 {
 	
+	private static var WORLDS:Array<EntityWorld> = new Array<EntityWorld>();
+	
+	public var worldId:Int;
+	
 	private var delta:Float;
 	
 	public var entityManager:EntityManager;
-	private var componentManager:ComponentManager;
+	public var componentManager:ComponentManager;
 	
 	private var systems:SLL<IEntitySystem>;
+	
+	private var eventManager:EntityEventManager;
 
 	public function new() 
 	{
+		_initWorldId();
+		
 		entityManager = new EntityManager(this);
 		componentManager = new ComponentManager();
 		
 		systems = new SLL<IEntitySystem>();
 		
+		eventManager = new EntityEventManager();
+		
 		delta = 0.0;
+	}
+	
+	private function _initWorldId():Void
+	{
+		if ( WORLDS.length == 0)
+		{
+			worldId = 0;
+			WORLDS.push( this);
+		}
+		else
+		{
+			for ( i in 0...WORLDS.length)
+			{
+				if ( WORLDS[i] == null)
+				{
+					worldId = i;
+					WORLDS[i] = this;
+				}
+			}
+		}
+		
+		trace ( WORLDS);
+	}
+	
+	public function getEventManager():EntityEventManager
+	{
+		return eventManager;
 	}
 	
 	public function updateSystems( timeStep:Float):Void
@@ -33,6 +70,8 @@ class EntityWorld
 		{
 			if ( system.canProcess()) system.process();
 		}
+		
+		eventManager.clear();
 	}
 	
 	/**
@@ -79,6 +118,8 @@ class EntityWorld
 	
 	public function destroy():Void
 	{
+		WORLDS[worldId] = null;
+		
 		for ( system in systems)
 		{
 			system.destroy();

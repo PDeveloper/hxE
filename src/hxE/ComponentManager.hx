@@ -7,9 +7,6 @@ import hxE.bits.BitSet;
  */
 class ComponentManager
 {
-	
-	private static var i:ComponentManager;
-	
 	private var numTypes:Int;
 	private var componentTypes:Hash<ComponentType>;
 	
@@ -17,29 +14,25 @@ class ComponentManager
 	{
 		numTypes = 0;
 		componentTypes = new Hash<ComponentType>();
-		
-		i = this;
 	}
 	
-	public static function getType( componentClass:Class<Component>):ComponentType
+	public function getType( componentClass:Class<Component>):ComponentType
 	{
-		if ( i == null) new ComponentManager();
-		
 		var type:ComponentType;
 		var className = Type.getClassName( componentClass);
-		if ( i.componentTypes.exists( className))
+		if ( componentTypes.exists( className))
 		{
-			type =  i.componentTypes.get( className);
+			type =  componentTypes.get( className);
 		}
 		else
 		{
 			var bits = new BitSet();
 			
-			i.numTypes++;
-			bits.set( i.numTypes, 1);
+			numTypes++;
+			bits.set( numTypes, 1);
 			
 			type = new ComponentType( componentClass, bits);
-			i.componentTypes.set( className, type);
+			componentTypes.set( className, type);
 		}
 		
 		return type;

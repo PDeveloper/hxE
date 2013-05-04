@@ -6,7 +6,7 @@ package hxE;
  */
 class Component
 {
-
+	
 	public function new() 
 	{
 		

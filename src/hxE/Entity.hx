@@ -23,9 +23,11 @@ class Entity
 	 * @param	id A unique id for this Entity.
 	 */
 	
-	public function new( id:UInt) 
+	public function new( id:UInt, world:EntityWorld) 
 	{
 		this.id = id;
+		this.world = world;
+		
 		bits = new BitSet();
 		isActive = true;
 		
@@ -72,7 +74,7 @@ class Entity
 		if ( !components.exists( className))
 		{
 			components.set( className, component);
-			bits.add( ComponentManager.getType( componentClass).bits);
+			bits.add( world.componentManager.getType( componentClass).bits);
 		}
 		else
 		{
@@ -153,12 +155,17 @@ class Entity
 		{
 			if ( dispose) components.get( className)._dispose();
 			components.remove( className);
-			bits.sub( ComponentManager.getType( componentClass).bits);
+			bits.sub( world.componentManager.getType( componentClass).bits);
 		}
 		else
 		{
 			trace( "No such component!");
 		}
+	}
+	
+	public function destroy():Void
+	{
+		world.destroyEntity( this);
 	}
 	
 	private function get_isActive():Bool 

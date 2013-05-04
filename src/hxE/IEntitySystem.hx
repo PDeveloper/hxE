@@ -7,10 +7,9 @@ import hxE.bits.BitSet;
  */
 interface IEntitySystem
 {
-
-	public var world:EntityWorld;
 	
-	private var bits:BitSet;
+	private var demand:Demand;
+	
 	private var entities:IntHash<Entity>;
 	
 	private var isPassive:Bool;
@@ -42,5 +41,9 @@ interface IEntitySystem
 	public function checkProcessing():Bool;
 	
 	public function destroy():Void;
+	
+	private function get_world():EntityWorld;
+	private function set_world(world:EntityWorld):EntityWorld;
+	public var world(get_world, set_world):EntityWorld;
 	
 }

@@ -50,14 +50,13 @@ class EntityManager
 		var e:Entity;
 		if ( freeEnt.isEmpty())
 		{
-			e = new Entity( getNextId());
+			e = new Entity( getNextId(), world);
 		}
 		else
 		{
 			e = freeEnt.pop();
 		}
 		
-		e.world = world;
 		e.activate();
 		
 		usedEnt.push( e);
