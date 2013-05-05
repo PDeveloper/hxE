@@ -66,7 +66,7 @@ class Entity
 	 * @param	component The component to add.
 	 */
 	
-	@:generic public function addComponent<T:Component>( component:T):Void
+	public function addComponent( component:Component):Void
 	{
 		world.componentManager.addComponent( this, component);
 	}
@@ -77,30 +77,14 @@ class Entity
 	 * @return
 	 */
 	
-	@:generic public function hasComponent<T:Component>():Bool
+	public function hasComponent( componentClass:Class<Component>):Bool
 	{
-		return world.componentManager.hasComponent<T>( this);
+		return world.componentManager.hasComponentClass( this, componentClass);
 	}
 	
-	@:generic public function hasComponentType<T:Component>( type:ComponentType<T>):Bool
+	public function hasComponentType( type:ComponentType):Bool
 	{
 		return world.componentManager.hasComponentType( this, type);
-	}
-	
-	/**
-	 * Get the type of component owned by this entity.
-	 * @param	componentClass The component type you wish to retrieve.
-	 * @return
-	 */
-	
-	@:generic public function getComponent<T:Component>():T
-	{
-		return world.componentManager.getComponent<T>( this);
-	}
-	
-	@:generic public function getComponentByType<T:Component>( type:ComponentType<T>):T
-	{
-		return world.componentManager.getComponentByType( this, type);
 	}
 	
 	/**
@@ -111,7 +95,22 @@ class Entity
 	public function getComponentIterator():Iterator<Component>
 	{
 		return world.componentManager.getComponents( this);
-		//return components.iterator();
+	}
+	
+	/**
+	 * Get the type of component owned by this entity.
+	 * @param	componentClass The component type you wish to retrieve.
+	 * @return
+	 */
+	
+	public function getComponent( componentClass:Class<Component>):Component
+	{
+		return world.componentManager.getComponentByClass( this, componentClass);
+	}
+	
+	public function getComponentByType( componentType:ComponentType):Component
+	{
+		return world.componentManager.getComponentByType( this, componentType);
 	}
 	
 	/**
@@ -119,9 +118,9 @@ class Entity
 	 * @param	component
 	 */
 	
-	@:generic public function removeComponent<T:Component>( component:T = null):Void
+	public function removeComponent( component:Component):Void
 	{
-		world.componentManager.removeComponent<T>( this);
+		world.componentManager.removeComponentByClass( this, Type.getClass( component));
 	}
 	
 	/**
@@ -131,19 +130,22 @@ class Entity
 	
 	public function removeComponentByClass( componentClass:Class<Component>):Void
 	{
-		//world.componentManager.removeComponentByClass( this, componentClass);
-		/*var className:String = Type.getClassName( componentClass);
-		
-		if ( components.exists( className))
-		{
-			if ( dispose) components.get( className)._dispose();
-			components.remove( className);
-			bits.sub( world.componentManager.getType( componentClass).bits);
-		}
-		else
-		{
-			trace( "No such component!");
-		}*/
+		world.componentManager.removeComponentByClass( this, componentClass);
+	}
+	
+	public function removeComponentByType( componentType:ComponentType):Void
+	{
+		world.componentManager.removeComponentByType( this, componentType);
+	}
+	
+	public function setTag( tag:String):Void
+	{
+		world.tags.set( id, tag);
+	}
+	
+	public function getTag():String
+	{
+		return world.tags.get( id);
 	}
 	
 	public function destroy():Void

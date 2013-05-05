@@ -20,6 +20,8 @@ class EntityWorld
 	private var systems:SLL<IEntitySystem>;
 	
 	private var eventManager:EntityEventManager;
+	
+	public var tags:Map<Int,String>;
 
 	public function new() 
 	{
@@ -31,6 +33,8 @@ class EntityWorld
 		systems = new SLL<IEntitySystem>();
 		
 		eventManager = new EntityEventManager();
+		
+		tags = new Map<Int,String>();
 		
 		delta = 0.0;
 	}
@@ -90,13 +94,13 @@ class EntityWorld
 		if ( system.world != null) system.world.removeSystem( system);
 		system.world = this;
 		
+		system._init();
+		
 		// Update the system with all currently used entities!
 		for ( e in entityManager.getUsedEntities())
 		{
 			system.updateEntity( e);
 		}
-		
-		system._init();
 	}
 	
 	public function removeSystem( system:IEntitySystem):Void

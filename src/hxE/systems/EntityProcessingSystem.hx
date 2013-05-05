@@ -18,7 +18,15 @@ class EntityProcessingSystem extends EntitySystem
 	@final
 	override public function processEntities(entitiesToProcess:Iterable<Entity>):Void 
 	{
-		for ( e in entitiesToProcess) processEntity( e);
+		for ( e in entitiesToProcess)
+		{
+			processEntity( e);
+			
+			if ( Type.getClassName( Type.getClass( this)).indexOf( "NAPESystem") != -1)
+			{
+				//trace (e);
+			}
+		}
 	}
 	
 	private function processEntity( e:Entity):Void
