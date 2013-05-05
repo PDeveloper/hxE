@@ -10,9 +10,13 @@ interface IEntitySystem
 	
 	private var demand:Demand;
 	
-	private var entities:IntHash<Entity>;
+	private var entities:Map<Int,Entity>;
 	
 	private var isPassive:Bool;
+	
+	public function registerSlot( slot:IComponentTypeSlot):Void;
+	
+	public function _init():Void;
 	
 	public function addEntity( e:Entity):Void;
 	

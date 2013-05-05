@@ -15,7 +15,7 @@ class Entity
 	
 	public var world:EntityWorld;
 	
-	private var components:Hash<Component>;
+	private var components:Map<Int,Component>;
 	
 	/**
 	 * Entity constructor. Should be treated as private, and never manually invoked.
@@ -31,7 +31,7 @@ class Entity
 		bits = new BitSet();
 		isActive = true;
 		
-		components = new Hash<Component>();
+		components = world.componentManager.register( this);
 	}
 	
 	/**
@@ -68,7 +68,8 @@ class Entity
 	
 	public function addComponent( component:Component):Void
 	{
-		var componentClass:Class<Component> = Type.getClass( component);
+		world.componentManager.addComponent( this, component);
+		/*var componentClass:Class<Component> = Type.getClass( component);
 		var className:String = Type.getClassName( componentClass);
 		
 		if ( !components.exists( className))
@@ -79,7 +80,7 @@ class Entity
 		else
 		{
 			trace( "Component already present!");
-		}
+		}*/
 	}
 	
 	/**
@@ -90,15 +91,15 @@ class Entity
 	
 	public function hasComponent( componentClass:Class<Component>):Bool
 	{
-		var className:String = Type.getClassName( componentClass);
+		return world.componentManager.hasComponentClass( this, componentClass);
+		/*var className:String = Type.getClassName( componentClass);
 		
-		return components.exists( className);
+		return components.exists( className);*/
 	}
 	
-	public function hasComponentType( component:Component):Bool
+	public function hasComponentType( type:ComponentType):Bool
 	{
-		var componentClass:Class<Component> = Type.getClass( component);
-		return hasComponent( componentClass);
+		return world.componentManager.hasComponentType( this, type);
 	}
 	
 	/**
@@ -108,7 +109,8 @@ class Entity
 	
 	public function getComponentIterator():Iterator<Component>
 	{
-		return components.iterator();
+		return world.componentManager.getComponents( this);
+		//return components.iterator();
 	}
 	
 	/**
@@ -119,16 +121,12 @@ class Entity
 	
 	public function getComponent( componentClass:Class<Component>):Component
 	{
-		var className:String = Type.getClassName( componentClass);
-		
-		if ( components.exists( className))
-		{
-			return components.get( className);
-		}
-		else
-		{
-			return null;
-		}
+		return world.componentManager.getComponentByClass( this, componentClass);
+	}
+	
+	public function getComponentByType( componentType:ComponentType):Component
+	{
+		return world.componentManager.getComponentByType( this, componentType);
 	}
 	
 	/**
@@ -136,10 +134,9 @@ class Entity
 	 * @param	component
 	 */
 	
-	public function removeComponent( component:Component, dispose:Bool = true):Void
+	public function removeComponent( component:Component):Void
 	{
-		var componentClass:Class<Component> = Type.getClass( component);
-		removeComponentByClass( componentClass, dispose);
+		world.componentManager.removeComponentByClass( this, Type.getClass( component));
 	}
 	
 	/**
@@ -147,9 +144,10 @@ class Entity
 	 * @param	componentClass
 	 */
 	
-	public function removeComponentByClass( componentClass:Class<Component>, dispose:Bool = true):Void
+	public function removeComponentByClass( componentClass:Class<Component>):Void
 	{
-		var className:String = Type.getClassName( componentClass);
+		world.componentManager.removeComponentByClass( this, componentClass);
+		/*var className:String = Type.getClassName( componentClass);
 		
 		if ( components.exists( className))
 		{
@@ -160,7 +158,12 @@ class Entity
 		else
 		{
 			trace( "No such component!");
-		}
+		}*/
+	}
+	
+	public function removeComponentByType( componentType:ComponentType):Void
+	{
+		world.componentManager.removeComponentByType( this, componentType);
 	}
 	
 	public function destroy():Void

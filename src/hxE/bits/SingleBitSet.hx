@@ -7,10 +7,14 @@ package hxE.bits;
 class SingleBitSet implements IBitSet
 {
 	
+	public var bitLength:Int;
+	
 	private var _bits:Int;
 
 	public function new() 
 	{
+		bitLength = 32;
+		
 		_bits = 0;
 	}
 	
@@ -22,6 +26,11 @@ class SingleBitSet implements IBitSet
 	public inline function set( bit:Int, value:Int):Void
 	{
 		_bits |= value << ( bit - 1);
+	}
+	
+	public inline function get( bit:Int):Int
+	{
+		return ( _bits >> (bit - 1)) & 1;
 	}
 	
 	public function add( bits:BitSet):BitSet

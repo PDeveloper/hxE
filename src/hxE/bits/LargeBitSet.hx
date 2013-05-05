@@ -7,6 +7,8 @@ package hxE.bits;
 class LargeBitSet implements IBitSet
 {
 	
+	public var bitLength:Int;
+	
 	private var fields:Array<Int>;
 	
 	private var size:Int;
@@ -33,6 +35,17 @@ class LargeBitSet implements IBitSet
 		if ( _field + 1 > size) size = _field + 1;
 		
 		fields[_field] |= value << _bit;
+	}
+	
+	public inline function get( bit:Int):Int
+	{
+		bit -= 1;
+		var _field:Int = bit >> 5;
+		var _bit:Int = bit - (_field << 5);
+		
+		if ( _field + 1 > size) size = _field + 1;
+		
+		return ( fields[_field] >> _bit) & 1;
 	}
 	
 	public function add( bits:BitSet):BitSet
@@ -130,6 +143,8 @@ class LargeBitSet implements IBitSet
 	{
 		for ( i in size...newSize) fields[i] = 0;
 		size = newSize;
+		
+		bitLength = 32 * newSize;
 	}
 	
 	public function toString():String

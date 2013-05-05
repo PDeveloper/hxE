@@ -14,9 +14,11 @@ class EntitySystem implements IEntitySystem
 	private var _reject:BitSet;
 	private var demand:Demand;
 	
-	private var entities:IntHash<Entity>;
+	private var entities:Map<Int,Entity>;
 	
 	private var isPassive:Bool;
+	
+	public var slots:Array<IComponentTypeSlot>;
 	
 	public function new( demand:Demand) 
 	{
@@ -26,7 +28,19 @@ class EntitySystem implements IEntitySystem
 		
 		isPassive = false;
 		
-		entities = new IntHash<Entity>();
+		entities = new Map<Int,Entity>();
+		slots = new Array<IComponentTypeSlot>();
+	}
+	
+	public function registerSlot( slot:IComponentTypeSlot):Void
+	{
+		slots.push( slot);
+	}
+	
+	@final
+	public function _init():Void
+	{
+		for ( slot in slots) slot.setWorld( _world);
 	}
 	
 	@final

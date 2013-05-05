@@ -8,14 +8,14 @@ import de.polygonal.ds.LinkedQueue;
 class EntityEventManager
 {
 	
-	private var flags:Hash<Bool>;
+	private var flags:Map<String,Bool>;
 	
-	private var events:Hash<LinkedQueue<Dynamic>>;
+	private var events:Map<String,LinkedQueue<Dynamic>>;
 	
 	public function new() 
 	{
-		flags = new Hash<Bool>();
-		events = new Hash<LinkedQueue<Dynamic>>();
+		flags = new Map<String,Bool>();
+		events = new Map<String,LinkedQueue<Dynamic>>();
 	}
 	
 	public function setFlag( flag:String, state:Bool):Void

@@ -95,6 +95,8 @@ class EntityWorld
 		{
 			system.updateEntity( e);
 		}
+		
+		system._init();
 	}
 	
 	public function removeSystem( system:IEntitySystem):Void

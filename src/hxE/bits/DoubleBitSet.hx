@@ -7,11 +7,15 @@ package hxE.bits;
 class DoubleBitSet implements IBitSet
 {
 	
+	public var bitLength:Int;
+	
 	private var _bits0:Int;
 	private var _bits1:Int;
 
 	public function new() 
 	{
+		bitLength = 64;
+		
 		_bits0 = 0;
 		_bits1 = 0;
 	}
@@ -26,6 +30,13 @@ class DoubleBitSet implements IBitSet
 	{
 		if ( bit < 33) _bits0 |= value << ( bit - 1);
 		else _bits1 |= value << ( bit - 33);
+	}
+	
+	public inline function get( bit:Int):Int
+	{
+		if ( bit < 33) return ( _bits0 >> (bit - 1)) & 1;
+		else return ( _bits1 >> (bit - 33)) & 1;
+		
 	}
 	
 	public function add( bits:BitSet):BitSet
