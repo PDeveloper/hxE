@@ -3,7 +3,7 @@ import hxE.Demand;
 import hxE.EntitySystem;
 
 /**
- * ...
+ * Will process entities in time intervals!
  * @author P Svilans
  */
 class IntervalSystem extends EntitySystem

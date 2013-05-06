@@ -32,6 +32,7 @@ class EntitySystem implements IEntitySystem
 		slots = new Array<IComponentTypeSlot>();
 	}
 	
+	@final
 	public function registerSlot( slot:IComponentTypeSlot):Void
 	{
 		slots.push( slot);
@@ -51,10 +52,20 @@ class EntitySystem implements IEntitySystem
 		onEntityAdded( e);
 	}
 	
+	/**
+	 * Called when an entity has been added to this system!
+	 * @param	e
+	 */
+	
 	public function onEntityAdded( e:Entity):Void
 	{
 		
 	}
+	
+	/**
+	 * Called when an entity has been removed from this system!
+	 * @param	e
+	 */
 	
 	public function onEntityRemoved( e:Entity):Void
 	{
@@ -75,6 +86,10 @@ class EntitySystem implements IEntitySystem
 		}
 	}
 	
+	/**
+	 * Clears all entities from this system! (Unstable right now)
+	 */
+	
 	public function clear():Void
 	{
 		var iterator = entities.iterator();
@@ -84,6 +99,10 @@ class EntitySystem implements IEntitySystem
 			onEntityRemoved( e);
 		}
 	}
+	
+	/**
+	 * Called when the system is to begin processing!
+	 */
 	
 	public function onBeginProcessing():Void
 	{
@@ -98,10 +117,19 @@ class EntitySystem implements IEntitySystem
 		onEndProcessing();
 	}
 	
+	/**
+	 * Proccesses all entities!
+	 * @param	entitiesToProcess
+	 */
+	
 	public function processEntities( entitiesToProcess:Iterable<Entity>):Void
 	{
 		
 	}
+	
+	/**
+	 * Called after all entities have been processed
+	 */
 	
 	public function onEndProcessing():Void
 	{
@@ -126,10 +154,19 @@ class EntitySystem implements IEntitySystem
 		return isPassive;
 	}
 	
+	/**
+	 * Returns if this entity system should process!
+	 * @return
+	 */
+	
 	public function checkProcessing():Bool
 	{
 		return true;
 	}
+	
+	/**
+	 * Called when this system is destroyed
+	 */
 	
 	public function destroy():Void
 	{

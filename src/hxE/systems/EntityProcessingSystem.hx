@@ -21,13 +21,13 @@ class EntityProcessingSystem extends EntitySystem
 		for ( e in entitiesToProcess)
 		{
 			processEntity( e);
-			
-			if ( Type.getClassName( Type.getClass( this)).indexOf( "NAPESystem") != -1)
-			{
-				//trace (e);
-			}
 		}
 	}
+	
+	/**
+	 * Override this to process on an entity by entity basis!
+	 * @param	e
+	 */
 	
 	private function processEntity( e:Entity):Void
 	{

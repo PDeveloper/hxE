@@ -1,7 +1,7 @@
 package hxE.systems;
 
 /**
- * ...
+ * Will always process, over intervals in time.
  * @author P Svilans
  */
 class VoidIntervalSystem extends VoidEntitySystem

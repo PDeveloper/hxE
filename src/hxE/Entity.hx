@@ -2,7 +2,7 @@ package hxE;
 import hxE.bits.BitSet;
 
 /**
- * ...
+ * An ENTITY! :o
  * @author P Svilans
  */
 class Entity
@@ -72,15 +72,21 @@ class Entity
 	}
 	
 	/**
-	 * Get the type of component owned by this entity.
-	 * @param	componentClass The component type you wish to retrieve.
-	 * @return
+	 * Check if this entity has the component class.
+	 * @param	componentClass The component class.
+	 * @return true if it has this component class
 	 */
 	
 	public function hasComponent( componentClass:Class<Component>):Bool
 	{
 		return world.componentManager.hasComponentClass( this, componentClass);
 	}
+	
+	/**
+	 * Check if this entity has the component type.
+	 * @param	type The component type.
+	 * @return true if it has this component type
+	 */
 	
 	public function hasComponentType( type:ComponentType):Bool
 	{
@@ -138,20 +144,39 @@ class Entity
 		world.componentManager.removeComponentByType( this, componentType);
 	}
 	
+	/**
+	 * Tag this entity with an Id.
+	 * @param	tag the id.
+	 */
+	
 	public function setTag( tag:String):Void
 	{
 		world.tags.set( id, tag);
 	}
+	
+	/**
+	 * Get this entity's tag.
+	 * @return returns null if it has not been tagged!
+	 */
 	
 	public function getTag():String
 	{
 		return world.tags.get( id);
 	}
 	
+	/**
+	 * Destroy this entity!
+	 */
+	
 	public function destroy():Void
 	{
 		world.destroyEntity( this);
 	}
+	
+	/**
+	 * Check if this entity is active!
+	 * @return
+	 */
 	
 	private function get_isActive():Bool 
 	{

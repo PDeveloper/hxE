@@ -2,7 +2,7 @@ package hxE;
 import hxE.bits.BitSet;
 
 /**
- * ...
+ * Class to declare which components a system needs, and which components it rejects!
  * @author P Svilans
  */
 class Demand
@@ -17,12 +17,24 @@ class Demand
 		_reject = new Array<Class<Component>>();
 	}
 	
+	/**
+	 * Add this component class to the REQUIRED types
+	 * @param	componentClass
+	 * @return
+	 */
+	
 	public function has( componentClass:Class<Component>):Demand
 	{
 		_require.push( componentClass);
 		
 		return this;
 	}
+	
+	/**
+	 * Add this component class to the REJECTED types
+	 * @param	componentClass
+	 * @return
+	 */
 	
 	public function lacks( componentClass:Class<Component>):Demand
 	{

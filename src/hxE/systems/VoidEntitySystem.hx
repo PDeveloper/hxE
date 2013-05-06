@@ -4,7 +4,7 @@ import hxE.Entity;
 import hxE.EntitySystem;
 
 /**
- * ...
+ * Will always process
  * @author P Svilans
  */
 class VoidEntitySystem extends EntitySystem
@@ -20,7 +20,11 @@ class VoidEntitySystem extends EntitySystem
 	{
 		processSystem();
 	}
-   
+	
+	/**
+	 * Override this to process this system!
+	 */
+	
 	private function processSystem():Void
 	{
 		

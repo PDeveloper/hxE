@@ -2,7 +2,7 @@ package hxE;
 import de.polygonal.ds.LinkedQueue;
 
 /**
- * ...
+ * Manages events
  * @author P Svilans
  */
 class EntityEventManager
@@ -18,15 +18,33 @@ class EntityEventManager
 		events = new Map<String,LinkedQueue<Dynamic>>();
 	}
 	
+	/**
+	 * Set a flag.
+	 * @param	flag
+	 * @param	state
+	 */
+	
 	public function setFlag( flag:String, state:Bool):Void
 	{
 		flags.set( flag, state);
 	}
 	
+	/**
+	 * Retrieve a flag - returns null if the flag hasn't been set!
+	 * @param	flag
+	 * @return
+	 */
+	
 	public function getFlag( flag:String):Null<Bool>
 	{
 		return flags.get( flag);
 	}
+	
+	/**
+	 * Push a new event!
+	 * @param	event the event id
+	 * @param	value the event's data - will optimize this with a specific event class later on.
+	 */
 	
 	public function push( event:String, value:Dynamic):Void
 	{
@@ -40,10 +58,23 @@ class EntityEventManager
 		buffer.enqueue( value);
 	}
 	
+	/**
+	 * Check if this event has been registered!
+	 * @param	event
+	 * @return
+	 */
+	
 	public function has( event:String):Bool
 	{
 		return events.exists( event);
 	}
+	
+	/**
+	 * Get all events of a certain type.
+	 * @param	event the id
+	 * @param	erase should erase the events?
+	 * @return the event values
+	 */
 	
 	public function getAll( event:String, erase:Bool = false):Array<Dynamic>
 	{
@@ -57,6 +88,13 @@ class EntityEventManager
 		return copy;
 	}
 	
+	/**
+	 * Get the next event of this type
+	 * @param	event the event id
+	 * @param	erase should erase event?
+	 * @return the event's value
+	 */
+	
 	public function get( event:String, erase:Bool = false):Dynamic
 	{
 		var buffer = events.get( event);
@@ -65,6 +103,10 @@ class EntityEventManager
 		if ( erase) return buffer.dequeue();
 		else return buffer.peek();
 	}
+	
+	/**
+	 * Clear all events. This is done automagically after the entity world has finished processing all systems.
+	 */
 	
 	public function clear():Void
 	{

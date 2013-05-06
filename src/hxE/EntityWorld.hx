@@ -86,6 +86,11 @@ class EntityWorld
 		return entityManager.create();
 	}
 	
+	/**
+	 * Adds a system to this world
+	 * @param	system
+	 */
+	
 	public function addSystem( system:IEntitySystem):Void
 	{
 		systems.append( system);
@@ -101,11 +106,21 @@ class EntityWorld
 		}
 	}
 	
+	/**
+	 * Removes a system from this world
+	 * @param	system
+	 */
+	
 	public function removeSystem( system:IEntitySystem):Void
 	{
 		systems.remove( system);
 		system.world = null;
 	}
+	
+	/**
+	 * Updates an entity
+	 * @param	e
+	 */
 	
 	public function updateEntity( e:Entity):Void
 	{
@@ -115,10 +130,18 @@ class EntityWorld
 		}
 	}
 	
+	/**
+	 * Destroys all entities!
+	 */
+	
 	public function destroyEntities():Void
 	{
 		entityManager.destroyAll();
 	}
+	
+	/**
+	 * Destroys this world, all systems, and all entities. BAM, clean up!
+	 */
 	
 	public function destroy():Void
 	{
@@ -135,10 +158,20 @@ class EntityWorld
 		destroyEntities();
 	}
 	
+	/**
+	 * Destroy an entity
+	 * @param	e
+	 */
+	
 	public function destroyEntity( e:Entity):Void
 	{
 		entityManager.destroy( e);
 	}
+	
+	/**
+	 * Get the current time step!
+	 * @return
+	 */
 	
 	public function getDelta():Float
 	{
