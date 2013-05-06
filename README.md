@@ -11,7 +11,7 @@ Installation
 
 Limitations
 --
-The number of components you can use is limited, since each component requires a unique bit flag. The default is 32, since the default BitSet is the SingleBitSet. You can define `-D hxEDoubleBit` which will increase the limit to 64 components, or `hxELargeBit` which allows unlimited components, but is also slower (relatively by a lot, but not sure if noticeable).
+The number of components you can use is limited, since each component requires a unique bit flag. The default is 32, since the default BitSet is the SingleBitSet. You can define compiler flags: `-D hxEDoubleBit` which will increase the limit to 64 components, or `-D hxELargeBit` which allows unlimited components, but is also slower (relatively by a lot, but not sure if noticeable).
 
 Docs
 --
