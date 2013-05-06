@@ -57,8 +57,6 @@ class EntityWorld
 				}
 			}
 		}
-		
-		trace ( WORLDS);
 	}
 	
 	public function getEventManager():EntityEventManager
