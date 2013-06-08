@@ -36,8 +36,8 @@ class TargetSystem extends EntityProcessingSystem
 		var dx = target.x - transform.x;
 		var dy = target.y - transform.y;
 		
-		transform.x += dx * 0.15;
-		transform.y += dy * 0.15;
+		transform.x += dx * 0.05;
+		transform.y += dy * 0.05;
 	}
 	
 }

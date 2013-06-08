@@ -1,5 +1,6 @@
 package hxE;
-import de.polygonal.ds.SLL;
+import haxe.ds.GenericStack;
+import hxE.ds.SingleLinkedList;
 
 /**
  * ...
@@ -17,7 +18,7 @@ class EntityWorld
 	public var entityManager:EntityManager;
 	public var componentManager:ComponentManager;
 	
-	private var systems:SLL<IEntitySystem>;
+	private var systems:SingleLinkedList<IEntitySystem>;
 	
 	private var eventManager:EntityEventManager;
 	
@@ -30,7 +31,7 @@ class EntityWorld
 		entityManager = new EntityManager(this);
 		componentManager = new ComponentManager();
 		
-		systems = new SLL<IEntitySystem>();
+		systems = new SingleLinkedList<IEntitySystem>();
 		
 		eventManager = new EntityEventManager();
 		
@@ -93,7 +94,7 @@ class EntityWorld
 	
 	public function addSystem( system:IEntitySystem):Void
 	{
-		systems.append( system);
+		systems.push_back( system);
 		if ( system.world != null) system.world.removeSystem( system);
 		system.world = this;
 		

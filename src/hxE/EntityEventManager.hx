@@ -1,5 +1,4 @@
 package hxE;
-import de.polygonal.ds.LinkedQueue;
 
 /**
  * Manages events
@@ -10,12 +9,12 @@ class EntityEventManager
 	
 	private var flags:Map<String,Bool>;
 	
-	private var events:Map<String,LinkedQueue<Dynamic>>;
+	private var events:Map<String,Array<Dynamic>>;
 	
 	public function new() 
 	{
 		flags = new Map<String,Bool>();
-		events = new Map<String,LinkedQueue<Dynamic>>();
+		events = new Map<String,Array<Dynamic>>();
 	}
 	
 	/**
@@ -51,11 +50,11 @@ class EntityEventManager
 		var buffer = events.get( event);
 		if ( buffer == null)
 		{
-			buffer = new LinkedQueue<Dynamic>();
+			buffer = new Array<Dynamic>();
 			events.set( event, buffer);
 		}
 		
-		buffer.enqueue( value);
+		buffer.push( value);
 	}
 	
 	/**
@@ -81,9 +80,9 @@ class EntityEventManager
 		var buffer = events.get( event);
 		if ( buffer == null) return null;
 		
-		var copy = buffer.toArray();
+		var copy = buffer.copy();
 		
-		if ( erase) buffer.clear();
+		if ( erase) while ( buffer.length > 0) buffer.pop();
 		
 		return copy;
 	}
@@ -98,10 +97,10 @@ class EntityEventManager
 	public function get( event:String, erase:Bool = false):Dynamic
 	{
 		var buffer = events.get( event);
-		if ( buffer == null || buffer.isEmpty()) return null;
+		if ( buffer == null || buffer.length == 0) return null;
 		
-		if ( erase) return buffer.dequeue();
-		else return buffer.peek();
+		if ( erase) return buffer.shift();
+		else return buffer[0];
 	}
 	
 	/**
@@ -110,7 +109,7 @@ class EntityEventManager
 	
 	public function clear():Void
 	{
-		for ( buffer in events) buffer.clear();
+		for ( buffer in events) while ( buffer.length > 0) buffer.pop();
 		
 		for ( key in flags.keys()) flags.remove( key);
 		for ( key in events.keys()) events.remove( key);

@@ -8,12 +8,12 @@ import hxE.bits.BitSet;
 class ComponentType
 {
 	
-	public var id:UInt;
+	public var id:Int;
 	
 	public var componentClass:Class<Component>;
 	public var bits:BitSet;
 	
-	public function new( componentClass:Class<Component>, id:UInt) 
+	public function new( componentClass:Class<Component>, id:Int) 
 	{
 		this.componentClass = componentClass;
 		

@@ -1,6 +1,5 @@
 package hxE;
-import de.polygonal.ds.LinkedStack;
-import de.polygonal.ds.Stack;
+import haxe.ds.GenericStack;
 
 /**
  * ...
@@ -13,17 +12,17 @@ class EntityManager
 	 * Pool entities.
 	 */
 	
-	private var freeEnt:Stack<Entity>;
-	private var usedEnt:Stack<Entity>;
+	private var freeEnt:GenericStack<Entity>;
+	private var usedEnt:GenericStack<Entity>;
 	
-	private var nextId:UInt;
+	private var nextId:Int;
 	
 	private var world:EntityWorld;
 	
 	public function new( world:EntityWorld) 
 	{
-		freeEnt = new LinkedStack<Entity>();
-		usedEnt = new LinkedStack<Entity>();
+		freeEnt = new GenericStack<Entity>();
+		usedEnt = new GenericStack<Entity>();
 		
 		nextId = 0;
 		
@@ -59,14 +58,14 @@ class EntityManager
 		
 		e.activate();
 		
-		usedEnt.push( e);
+		usedEnt.add( e);
 		
 		return e;
 	}
 	
-	public function getUsedEntities():Array<Entity>
+	public function getUsedEntities():Iterator<Entity>
 	{
-		return usedEnt.toArray();
+		return usedEnt.iterator();
 	}
 	
 	public function destroy( e:Entity):Void
@@ -82,7 +81,7 @@ class EntityManager
 		e.deactivate();
 		
 		usedEnt.remove( e);
-		freeEnt.push( e);
+		freeEnt.add( e);
 	}
 	
 }

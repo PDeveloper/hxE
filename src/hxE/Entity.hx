@@ -8,7 +8,7 @@ import hxE.bits.BitSet;
 class Entity
 {
 	
-	public var id:UInt;
+	public var id:Int;
 	public var bits:BitSet;
 	
 	private var _isActive:Bool;
