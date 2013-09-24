@@ -16,7 +16,7 @@ The number of components you can use is limited, since each component requires a
 Docs
 --
 
-I'll be adding to the Wiki in a few days. For now, see the sample included!
+I'll be adding to the Wiki in a few days. For now, see the samples included!
 
 Read up on Entity systems! (There are 5 parts to the below link)
 http://t-machine.org/index.php/2007/09/03/entity-systems-are-the-future-of-mmog-development-part-1/
