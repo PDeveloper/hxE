@@ -7,15 +7,13 @@ package hxE.bits;
 class DoubleBitSet implements IBitSet
 {
 	
-	public var bitLength:Int;
+	public static var bitLength:Int = 64;
 	
 	private var _bits0:Int;
 	private var _bits1:Int;
 
 	public function new() 
 	{
-		bitLength = 64;
-		
 		_bits0 = 0;
 		_bits1 = 0;
 	}

@@ -9,27 +9,33 @@ import hxE.bits.BitSet;
 class ComponentManager
 {
 	private var numTypes:Int;
-	private var componentTypes:Map<String,ComponentType>;
+	private var componentTypes:Map<String , IComponentType>;
 	
-	private var entityComponents:Array<Map<Int,Component>>;
+	private var entityComponents:Array<ComponentContainerBase>;
 	
 	public function new() 
 	{
 		numTypes = 0;
-		componentTypes = new Map<String,ComponentType>();
-		entityComponents = new Array<Map<Int,Component>>();
+		componentTypes = new Map<String,IComponentType>();
+		entityComponents = new Array<ComponentContainerBase>();
 	}
 	
-	/**
-	 * Register an entity to the manager; sets up component storage for this entity.
-	 * @param	e the entity
-	 * @return
-	 */
-	
-	public function register( e:Entity):Map<Int,Component>
+	public function getComponentContainer( t:IComponentType ):ComponentContainerBase
 	{
-		entityComponents[ e.id] = new Map<Int,Component>();
-		return entityComponents[ e.id];
+		return entityComponents[ t.id ];
+	}
+	
+	public function getOwnerId( c:Component ):Int
+	{
+		var type = getType( Type.getClass( c ) );
+		var container = entityComponents[ type.id ];
+		var array = container.getArray();
+		for ( i in 0...array.length )
+		{
+			if ( array[ i ] == c ) return i;
+		}
+		
+		return -1;
 	}
 	
 	/**
@@ -38,11 +44,11 @@ class ComponentManager
 	 * @param	c the component
 	 */
 	
-	public function addComponent( e:Entity, c:Component):Void
+	public function addComponent( e:Entity, c:Component ):Void
 	{
-		var t = getType( Type.getClass( c));
+		var t = getType( Type.getClass( c ) );
 		
-		addComponentType( e, c, t);
+		addComponentType( e, c, t );
 	}
 	
 	/**
@@ -52,10 +58,10 @@ class ComponentManager
 	 * @param	t the component type
 	 */
 	
-	public function addComponentType( e:Entity, c:Component, t:ComponentType):Void
+	public function addComponentType( e:Entity, c:Component, t:IComponentType ):Void
 	{
-		entityComponents[ e.id].set( t.id, c);
-		e.bits.add( t.bits);
+		entityComponents[ t.id ].setComponent( e.id, c );
+		e.bits.add( t.bits );
 	}
 	
 	/**
@@ -65,10 +71,10 @@ class ComponentManager
 	 * @return true if the entity has the component already
 	 */
 	
-	public function hasComponentClass( e:Entity, c:Class<Component>):Bool
+	public function hasComponentClass( e:Entity, c:Class<Component> ):Bool
 	{
-		var t = getType( c);
-		return hasComponentType( e, t);
+		var t = getType( c );
+		return hasComponentType( e, t );
 	}
 	
 	/**
@@ -78,13 +84,11 @@ class ComponentManager
 	 * @return true if the entity has the component already
 	 */
 	
-	public function hasComponentType( e:Entity, t:ComponentType):Bool
+	public function hasComponentType( e:Entity, t:IComponentType ):Bool
 	{
-		var components = entityComponents[ e.id];
+		var components = entityComponents[ t.id ];
 		
-		if ( components.exists( t.id)) return true;
-		
-		return false;
+		return components.has( e.id );
 	}
 	
 	/**
@@ -94,11 +98,11 @@ class ComponentManager
 	 * @return the component
 	 */
 	
-	public function getComponentByClass( e:Entity, componentClass:Class<Component>):Component
+	public function getComponentByClass( e:Entity, componentClass:Class<Component> ):Component
 	{
-		var t = getType( componentClass);
+		var t = getType( componentClass );
 		
-		return getComponentByType( e, t);
+		return getComponentByType( e, t );
 	}
 	
 	/**
@@ -108,10 +112,10 @@ class ComponentManager
 	 * @return the component
 	 */
 	
-	public function getComponentByType( e:Entity, t:ComponentType):Component
+	public function getComponentByType( e:Entity, t:IComponentType ):Component
 	{
-		var components = entityComponents[ e.id];
-		return components.get( t.id);
+		var components = entityComponents[ t.id ];
+		return components.getComponent( e.id );
 	}
 	
 	/**
@@ -120,10 +124,10 @@ class ComponentManager
 	 * @param	c the component class
 	 */
 	
-	public function removeComponentByClass( e:Entity, c:Class<Component>):Void
+	public function removeComponentByClass( e:Entity, c:Class<Component> ):Void
 	{
-		var t = getType( c);
-		removeComponentByType( e, t);
+		var t = getType( c );
+		removeComponentByType( e, t );
 	}
 	
 	/**
@@ -132,14 +136,41 @@ class ComponentManager
 	 * @param	t the component type
 	 */
 	
-	public function removeComponentByType( e:Entity, t:ComponentType):Void
+	public function removeComponentByType( e:Entity, t:IComponentType ):Void
 	{
-		var components = entityComponents[ e.id];
+		var components = entityComponents[ t.id ];
 		
-		components.get( t.id)._dispose();
-		components.remove( t.id);
+		components.remove( e.id );
 		
-		e.bits.sub( t.bits);
+		e.bits.sub( t.bits );
+	}
+	
+	/**
+	 * Remove a component from an entity by Class<Component>
+	 * @param	e the entity
+	 * @param	c the component class
+	 */
+	
+	public function deleteComponentByClass( e:Entity, c:Class<Component> ):Void
+	{
+		var t = getType( c );
+		removeComponentByType( e, t );
+	}
+	
+	/**
+	 * Remove a component from an entity by component type
+	 * @param	e the entity
+	 * @param	t the component type
+	 */
+	
+	public function deleteComponentByType( e:Entity, t:IComponentType ):Void
+	{
+		var components = entityComponents[ t.id ];
+		
+		components.getComponent( e.id ).dispose();
+		components.remove( e.id );
+		
+		e.bits.sub( t.bits );
 	}
 	
 	/**
@@ -148,9 +179,15 @@ class ComponentManager
 	 * @return an iterator of all components
 	 */
 	
-	public function getComponents( e:Entity):Iterator<Component>
+	public function getComponents( e:Entity ):List<Component>
 	{
-		return entityComponents[ e.id].iterator();
+		var l = new List<Component>();
+		for ( components in entityComponents )
+		{
+			if ( components.has( e.id ) ) l.add( components.getComponent( e.id ) );
+		}
+		
+		return l;
 	}
 	
 	/**
@@ -159,19 +196,20 @@ class ComponentManager
 	 * @return the component type
 	 */
 	
-	public function getType( componentClass:Class<Component>):ComponentType
+	public function getType<T:Component>( componentClass:Class<T> ):IComponentType
 	{
-		var type:ComponentType;
-		var className = Type.getClassName( componentClass);
-		if ( componentTypes.exists( className))
+		var type:IComponentType;
+		var className = Type.getClassName( componentClass );
+		if ( componentTypes.exists( className ) )
 		{
-			type =  componentTypes.get( className);
+			type = componentTypes.get( className );
 		}
 		else
 		{
-			type = new ComponentType( componentClass, numTypes);
+			type = new ComponentType( componentClass, numTypes );
+			entityComponents[ numTypes ] = new ComponentContainer<T>();
 			numTypes++;
-			componentTypes.set( className, type);
+			componentTypes.set( className, type );
 		}
 		
 		return type;

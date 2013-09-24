@@ -1,11 +1,13 @@
 package hxE;
 import haxe.ds.GenericStack;
-import hxE.ds.SingleLinkedList;
 
 /**
  * ...
  * @author P Svilans
  */
+
+typedef Constructable = { function new():Void; };
+
 class EntityWorld
 {
 	
@@ -18,9 +20,8 @@ class EntityWorld
 	public var entityManager:EntityManager;
 	public var componentManager:ComponentManager;
 	
-	private var systems:SingleLinkedList<IEntitySystem>;
-	
-	private var eventManager:EntityEventManager;
+	private var systems:List<IEntitySystem>;
+	private var contexts:Map<String,Dynamic>;
 	
 	public var tags:Map<Int,String>;
 
@@ -31,11 +32,10 @@ class EntityWorld
 		entityManager = new EntityManager(this);
 		componentManager = new ComponentManager();
 		
-		systems = new SingleLinkedList<IEntitySystem>();
-		
-		eventManager = new EntityEventManager();
+		systems = new List<IEntitySystem>();
 		
 		tags = new Map<Int,String>();
+		contexts = new Map<String,Dynamic>();
 		
 		delta = 0.0;
 	}
@@ -60,21 +60,14 @@ class EntityWorld
 		}
 	}
 	
-	public function getEventManager():EntityEventManager
-	{
-		return eventManager;
-	}
-	
 	public function updateSystems( timeStep:Float):Void
 	{
 		this.delta = timeStep;
 		
-		for ( system in systems)
+		for ( system in systems )
 		{
-			if ( system.canProcess()) system.process();
+			if ( system.canProcess() ) system.process();
 		}
-		
-		eventManager.clear();
 	}
 	
 	/**
@@ -94,16 +87,16 @@ class EntityWorld
 	
 	public function addSystem( system:IEntitySystem):Void
 	{
-		systems.push_back( system);
-		if ( system.world != null) system.world.removeSystem( system);
+		systems.add( system );
+		if ( system.world != null ) system.world.removeSystem( system );
 		system.world = this;
 		
-		system._init();
+		system.__init();
 		
 		// Update the system with all currently used entities!
-		for ( e in entityManager.getUsedEntities())
+		for ( e in entityManager.getUsedEntities() )
 		{
-			system.updateEntity( e);
+			system.updateEntity( e );
 		}
 	}
 	
@@ -112,10 +105,24 @@ class EntityWorld
 	 * @param	system
 	 */
 	
-	public function removeSystem( system:IEntitySystem):Void
+	public function removeSystem( system:IEntitySystem ):Void
 	{
-		systems.remove( system);
+		systems.remove( system );
 		system.world = null;
+	}
+	
+	@:generic public function getContext <T:(Constructable, Context)> ( id:String, ContextType:Class<T>):T
+	{
+		if ( contexts.exists(id) ) return contexts.get( id );
+		else
+		{
+			var context = new T();
+			contexts.set( id, context );
+			
+			context.onCreated( this );
+			
+			return context;
+		}
 	}
 	
 	/**
@@ -123,11 +130,11 @@ class EntityWorld
 	 * @param	e
 	 */
 	
-	public function updateEntity( e:Entity):Void
+	public function updateEntity( e:Entity ):Void
 	{
-		for ( system in systems)
+		for ( system in systems )
 		{
-			system.updateEntity( e);
+			system.updateEntity( e );
 		}
 	}
 	
@@ -148,7 +155,7 @@ class EntityWorld
 	{
 		WORLDS[worldId] = null;
 		
-		for ( system in systems)
+		for ( system in systems )
 		{
 			system.destroy();
 			system = null;
@@ -164,9 +171,9 @@ class EntityWorld
 	 * @param	e
 	 */
 	
-	public function destroyEntity( e:Entity):Void
+	public function destroyEntity( e:Entity ):Void
 	{
-		entityManager.destroy( e);
+		entityManager.destroy( e );
 	}
 	
 	/**

@@ -10,21 +10,25 @@ interface IEntitySystem
 	
 	private var demand:Demand;
 	
-	private var entities:Map<Int,Entity>;
+	private var entities:List<Entity>;
 	
 	private var isPassive:Bool;
 	
 	public function registerSlot( slot:IComponentTypeSlot):Void;
 	
-	public function _init():Void;
+	public function __init():Void;
+	public function initialize():Void;
 	
-	public function addEntity( e:Entity):Void;
+	public function __dispose():Void;
+	public function dispose():Void;
 	
-	public function onEntityAdded( e:Entity):Void;
+	public function addEntity( e:Entity ):Void;
 	
-	public function onEntityRemoved( e:Entity):Void;
+	public function onEntityAdded( e:Entity ):Void;
 	
-	public function updateEntity( e:Entity):Void;
+	public function onEntityRemoved( e:Entity ):Void;
+	
+	public function updateEntity( e:Entity ):Void;
 	
 	public function clear():Void;
 	
@@ -32,13 +36,13 @@ interface IEntitySystem
 	
 	public function process():Void;
 	
-	public function processEntities( entitiesToProcess:Iterable<Entity>):Void;
+	public function processEntities( entitiesToProcess:Iterable<Entity> ):Void;
 	
 	public function onEndProcessing():Void;
 	
 	public function canProcess():Bool;
 	
-	public function setPassive( isPassive:Bool):Void;
+	public function setPassive( isPassive:Bool ):Void;
 	
 	public function getPassive():Bool;
 	

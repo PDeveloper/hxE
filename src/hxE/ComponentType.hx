@@ -5,15 +5,15 @@ import hxE.bits.BitSet;
  * ...
  * @author P Svilans
  */
-class ComponentType
+class ComponentType<T:Component> implements IComponentType
 {
 	
 	public var id:Int;
 	
-	public var componentClass:Class<Component>;
+	public var componentClass:Class<T>;
 	public var bits:BitSet;
 	
-	public function new( componentClass:Class<Component>, id:Int) 
+	public function new( componentClass:Class<T>, id:Int) 
 	{
 		this.componentClass = componentClass;
 		

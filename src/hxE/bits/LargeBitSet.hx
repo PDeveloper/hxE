@@ -7,7 +7,7 @@ package hxE.bits;
 class LargeBitSet implements IBitSet
 {
 	
-	public var bitLength:Int;
+	public static var bitLength:Int = 256;
 	
 	private var fields:Array<Int>;
 	

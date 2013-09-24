@@ -1,6 +1,8 @@
 package hxE;
 import haxe.ds.GenericStack;
 
+using Lambda;
+
 /**
  * ...
  * @author P Svilans
@@ -38,9 +40,9 @@ class EntityManager
 	
 	public function destroyAll():Void
 	{
-		for ( e in usedEnt)
+		for ( e in usedEnt )
 		{
-			destroy( e);
+			destroy( e );
 		}
 	}
 	
@@ -63,12 +65,12 @@ class EntityManager
 		return e;
 	}
 	
-	public function getUsedEntities():Iterator<Entity>
+	public function getUsedEntities():List<Entity>
 	{
-		return usedEnt.iterator();
+		return usedEnt.list();
 	}
 	
-	public function destroy( e:Entity):Void
+	public function destroy( e:Entity ):Void
 	{
 		var components = e.getComponentIterator();
 		

@@ -1,6 +1,8 @@
 package hxE;
 import hxE.bits.BitSet;
 
+using Lambda;
+
 /**
  * ...
  * @author P Svilans
@@ -14,7 +16,7 @@ class EntitySystem implements IEntitySystem
 	private var _reject:BitSet;
 	private var demand:Demand;
 	
-	private var entities:Map<Int,Entity>;
+	private var entities:List<Entity>;
 	
 	private var isPassive:Bool;
 	
@@ -28,28 +30,48 @@ class EntitySystem implements IEntitySystem
 		
 		isPassive = false;
 		
-		entities = new Map<Int,Entity>();
+		entities = new List<Entity>();
 		slots = new Array<IComponentTypeSlot>();
 	}
 	
 	@final
-	public function registerSlot( slot:IComponentTypeSlot):Void
+	public function registerSlot( slot:IComponentTypeSlot ):Void
 	{
-		slots.push( slot);
+		slots.push( slot );
 	}
 	
 	@final
-	public function _init():Void
+	public function __init():Void
 	{
-		for ( slot in slots) slot.setWorld( _world);
-	}
-	
-	@final
-	public function addEntity( e:Entity):Void
-	{
-		entities.set( e.id, e);
+		for ( slot in slots) slot.setWorld( _world );
 		
-		onEntityAdded( e);
+		initialize();
+	}
+	
+	public function initialize():Void
+	{
+		
+	}
+	
+	@final
+	public function __dispose():Void
+	{
+		for ( slot in slots) slot.setWorld( null );
+		
+		dispose();
+	}
+	
+	public function dispose():Void
+	{
+		
+	}
+	
+	@final
+	public function addEntity( e:Entity ):Void
+	{
+		entities.add( e );
+		
+		onEntityAdded( e );
 	}
 	
 	/**
@@ -73,16 +95,19 @@ class EntitySystem implements IEntitySystem
 	}
 	
 	@final
-	public function updateEntity( e:Entity):Void
+	public function updateEntity( e:Entity ):Void
 	{
-		if ( e.bits.contains( _require) && _reject.contains( e.bits))
+		if ( e.bits.contains( _require ) && _reject.contains( e.bits ) )
 		{
-			if ( !entities.exists( e.id)) addEntity( e);
+			if ( !entities.has( e ) )
+			{
+				addEntity( e );
+			}
 		}
-		else if ( entities.exists( e.id))
+		else if ( entities.has( e ) )
 		{
-			entities.remove( e.id);
-			onEntityRemoved( e);
+			entities.remove( e );
+			onEntityRemoved( e );
 		}
 	}
 	
@@ -95,8 +120,8 @@ class EntitySystem implements IEntitySystem
 		var iterator = entities.iterator();
 		for ( e in iterator)
 		{
-			entities.remove( e.id);
-			onEntityRemoved( e);
+			entities.remove( e );
+			onEntityRemoved( e );
 		}
 	}
 	
@@ -113,7 +138,7 @@ class EntitySystem implements IEntitySystem
 	public function process():Void
 	{
 		onBeginProcessing();
-		processEntities( entities);
+		processEntities( entities );
 		onEndProcessing();
 	}
 	

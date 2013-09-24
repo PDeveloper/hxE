@@ -8,8 +8,9 @@ package hxE;
 {
 	
 	private var manager:ComponentManager;
-	private var type:ComponentType;
-	private var componentClass:Class<Component>;
+	private var type:ComponentType<T>;
+	private var componentClass:Class<T>;
+	private var componentContainer:ComponentContainer<T>;
 	
 	/**
 	 * Must do: new ComponentTypeSlot<MyComponentClass>(MyComponentClass);
@@ -17,9 +18,15 @@ package hxE;
 	 * @param	componentClass the component class
 	 */
 	
-	public function new( componentClass:Class<Component>) 
+	public function new( componentClass:Class<T> ) 
 	{
 		this.componentClass = componentClass;
+	}
+	
+	public function add( e:Entity, component:T ):Void
+	{
+		componentContainer.set( e.id, component );
+		e.bits.add( type.bits );
 	}
 	
 	/**
@@ -28,9 +35,9 @@ package hxE;
 	 * @return the component
 	 */
 	
-	public function get( e:Entity):T
+	public function get( e:Entity ):T
 	{
-		return cast manager.getComponentByType( e, type);
+		return componentContainer.get( e.id );
 	}
 	
 	/**
@@ -39,9 +46,9 @@ package hxE;
 	 * @return true if the entity has this type of component
 	 */
 	
-	public function has( e:Entity):Bool
+	public function has( e:Entity ):Bool
 	{
-		return manager.hasComponentType( e, type);
+		return componentContainer.has( e.id );
 	}
 	
 	/**
@@ -49,9 +56,18 @@ package hxE;
 	 * @param	e the entity
 	 */
 	
-	public function remove( e:Entity):Void
+	public function remove( e:Entity ):Void
 	{
-		manager.removeComponentByType( e, type);
+		componentContainer.remove( e.id );
+		e.bits.sub( type.bits );
+	}
+	
+	public function delete( e:Entity ):Void
+	{
+		componentContainer.get( e.id ).dispose();
+		
+		componentContainer.remove( e.id );
+		e.bits.sub( type.bits );
 	}
 	
 	/**
@@ -59,10 +75,20 @@ package hxE;
 	 * @param	world the world to change to
 	 */
 	
-	public function setWorld( world:EntityWorld):Void
+	public function setWorld( world:EntityWorld ):Void
 	{
-		manager = world.componentManager;
-		type = manager.getType( componentClass);
+		if ( world != null )
+		{
+			manager = world.componentManager;
+			type = cast manager.getType( componentClass);
+			componentContainer = cast manager.getComponentContainer( type );
+		}
+		else
+		{
+			manager = null;
+			type = null;
+			componentContainer = null;
+		}
 	}
 	
 }

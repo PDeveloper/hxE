@@ -15,8 +15,6 @@ class Entity
 	
 	public var world:EntityWorld;
 	
-	private var components:Map<Int,Component>;
-	
 	/**
 	 * Entity constructor. Should be treated as private, and never manually invoked.
 	 * Use myEntityWorld.create();
@@ -30,8 +28,6 @@ class Entity
 		
 		bits = new BitSet();
 		isActive = true;
-		
-		components = world.componentManager.register( this);
 	}
 	
 	/**
@@ -88,7 +84,7 @@ class Entity
 	 * @return true if it has this component type
 	 */
 	
-	public function hasComponentType( type:ComponentType):Bool
+	public function hasComponentType( type:IComponentType):Bool
 	{
 		return world.componentManager.hasComponentType( this, type);
 	}
@@ -98,9 +94,9 @@ class Entity
 	 * @return
 	 */
 	
-	public function getComponentIterator():Iterator<Component>
+	public function getComponentIterator():List<Component>
 	{
-		return world.componentManager.getComponents( this);
+		return world.componentManager.getComponents( this );
 	}
 	
 	/**
@@ -114,7 +110,7 @@ class Entity
 		return world.componentManager.getComponentByClass( this, componentClass);
 	}
 	
-	public function getComponentByType( componentType:ComponentType):Component
+	public function getComponentByType( componentType:IComponentType):Component
 	{
 		return world.componentManager.getComponentByType( this, componentType);
 	}
@@ -124,7 +120,7 @@ class Entity
 	 * @param	component
 	 */
 	
-	public function removeComponent( component:Component):Void
+	public function removeComponent( component:Component ):Void
 	{
 		world.componentManager.removeComponentByClass( this, Type.getClass( component));
 	}
@@ -134,14 +130,39 @@ class Entity
 	 * @param	componentClass
 	 */
 	
-	public function removeComponentByClass( componentClass:Class<Component>):Void
+	public function removeComponentByClass( componentClass:Class<Component> ):Void
 	{
 		world.componentManager.removeComponentByClass( this, componentClass);
 	}
 	
-	public function removeComponentByType( componentType:ComponentType):Void
+	public function removeComponentByType( componentType:IComponentType ):Void
 	{
 		world.componentManager.removeComponentByType( this, componentType);
+	}
+	
+	/**
+	 * Remove component from this entity.
+	 * @param	component
+	 */
+	
+	public function deleteComponent( component:Component ):Void
+	{
+		world.componentManager.deleteComponentByClass( this, Type.getClass( component));
+	}
+	
+	/**
+	 * Removes the component by type of component rather than reference.
+	 * @param	componentClass
+	 */
+	
+	public function deleteComponentByClass( componentClass:Class<Component> ):Void
+	{
+		world.componentManager.deleteComponentByClass( this, componentClass);
+	}
+	
+	public function deleteComponentByType( componentType:IComponentType ):Void
+	{
+		world.componentManager.deleteComponentByType( this, componentType);
 	}
 	
 	/**
