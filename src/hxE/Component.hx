@@ -13,6 +13,10 @@ class Component
 		
 	}
 	
+	/**
+	 * dispose will be called when deleting a component. Use it to clean up this components properties etc.
+	 */
+	
 	public function dispose():Void
 	{
 		

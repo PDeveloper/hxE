@@ -24,7 +24,7 @@ class EntityWorld
 	private var contexts:Map<String,Dynamic>;
 	
 	public var tags:Map<Int,String>;
-
+	
 	public function new() 
 	{
 		_initWorldId();
@@ -34,7 +34,6 @@ class EntityWorld
 		
 		systems = new List<IEntitySystem>();
 		
-		tags = new Map<Int,String>();
 		contexts = new Map<String,Dynamic>();
 		
 		delta = 0.0;
