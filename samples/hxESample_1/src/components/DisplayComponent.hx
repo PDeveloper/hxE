@@ -19,7 +19,7 @@ class DisplayComponent extends Component
 		this.graphic = graphic;
 	}
 	
-	override public function _dispose():Void 
+	override public function dispose():Void 
 	{
 		// If the graphic was attached to anything, then remove it!
 		if ( graphic.parent != null) graphic.parent.removeChild( graphic);

@@ -1,7 +1,0 @@
--cp src
--cp ../../src
--lib polygonal-ds
--swf bin/hxESample1.swf
--swf-header 800:600:60:5E5346
--swf-version 10.1
--main Main
