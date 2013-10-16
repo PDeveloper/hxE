@@ -21,7 +21,7 @@ class Entity
 	 * @param	id A unique id for this Entity.
 	 */
 	
-	public function new( id:UInt, world:EntityWorld) 
+	public function new( id:Int, world:EntityWorld) 
 	{
 		this.id = id;
 		this.world = world;

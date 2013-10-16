@@ -31,7 +31,7 @@ class EntityManager
 		this.world = world;
 	}
 	
-	private function getNextId():UInt
+	private function getNextId():Int
 	{
 		var nid = nextId;
 		nextId++;
