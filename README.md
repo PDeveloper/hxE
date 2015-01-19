@@ -7,7 +7,7 @@ http://gamadu.com/artemis/
 Installation
 --
 
-`haxelib git hxE https://github.com/PDeveloper/hxE.git src`
+`haxelib git hxE https://github.com/PDeveloper/hxE.git`
 
 Limitations
 --
