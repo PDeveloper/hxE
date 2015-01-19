@@ -23,7 +23,8 @@ class EntityWorld
 	private var systems:List<IEntitySystem>;
 	private var contexts:Map<String,Dynamic>;
 	
-	public var tags:Map<Int,String>;
+	public var entity_id_tag:Array<String>;
+	public var entity_tag_id:Map<String, Array<Entity>>;
 	
 	public function new() 
 	{
@@ -33,24 +34,82 @@ class EntityWorld
 		componentManager = new ComponentManager();
 		
 		systems = new List<IEntitySystem>();
-		
 		contexts = new Map<String,Dynamic>();
+		
+		entity_id_tag = new Array<String>();
+		entity_tag_id = new Map<String, Array<Entity>>();
 		
 		delta = 0.0;
 	}
 	
+	/**
+	 * Tag an entity by a String
+	 * @param	e Entity to tag.
+	 * @param	tag String to tag with, or null to remove tag.
+	 */
+	
+	public function setTag(e:Entity, tag:String = null):Void
+	{
+		// Remove old tag
+		if (getTag(e) != null) getEntitiesByTag(getTag(e)).remove(e);
+		// Add to new tag
+		if (tag != null) getEntitiesByTag(tag).push(e);
+		
+		entity_id_tag[e.id] = tag;
+	}
+	
+	/**
+	 * Removes a tag. Same as setTag(e, null);
+	 * @param	e Entity to untag.
+	 */
+	
+	public inline function removeTag(e:Entity):Void
+	{
+		setTag(e);
+	}
+	
+	/**
+	 * Get the tag for this entity.
+	 * @param	e Entity to get tag for.
+	 * @return The tag...obviously.
+	 */
+	
+	public function getTag(e:Entity):String
+	{
+		return entity_id_tag[e.id];
+	}
+	
+	/**
+	 * Get all entities tagged by the tag.
+	 * @param	tag
+	 * @return
+	 */
+	
+	public inline function getEntitiesByTag(tag:String):Array<Entity>
+	{
+		var entities:Array<Entity> = null;
+		if (entity_tag_id.exists(tag)) entities = entity_tag_id.get(tag);
+		else
+		{
+			entities = new Array<Entity>();
+			entity_tag_id.set(tag, entities);
+		}
+		
+		return entities;
+	}
+	
 	private function _initWorldId():Void
 	{
-		if ( WORLDS.length == 0)
+		if (WORLDS.length == 0)
 		{
 			worldId = 0;
-			WORLDS.push( this);
+			WORLDS.push(this);
 		}
 		else
 		{
-			for ( i in 0...WORLDS.length)
+			for (i in 0...WORLDS.length)
 			{
-				if ( WORLDS[i] == null)
+				if (WORLDS[i] == null)
 				{
 					worldId = i;
 					WORLDS[i] = this;
@@ -59,13 +118,13 @@ class EntityWorld
 		}
 	}
 	
-	public function updateSystems( timeStep:Float):Void
+	public function updateSystems(timeStep:Float):Void
 	{
 		this.delta = timeStep;
 		
-		for ( system in systems )
+		for (system in systems)
 		{
-			if ( system.canProcess() ) system.process();
+			if (system.canProcess()) system.process();
 		}
 	}
 	
@@ -74,7 +133,7 @@ class EntityWorld
 	 * @return
 	 */
 	
-	public function create():Entity
+	public inline function create():Entity
 	{
 		return entityManager.create();
 	}
@@ -84,18 +143,18 @@ class EntityWorld
 	 * @param	system
 	 */
 	
-	public function addSystem( system:IEntitySystem):Void
+	public function addSystem(system:IEntitySystem):Void
 	{
-		systems.add( system );
-		if ( system.world != null ) system.world.removeSystem( system );
+		systems.add(system );
+		if (system.world != null) system.world.removeSystem(system);
 		system.world = this;
 		
 		system.__init();
 		
 		// Update the system with all currently used entities!
-		for ( e in entityManager.getUsedEntities() )
+		for (e in entityManager.getUsedEntities())
 		{
-			system.updateEntity( e );
+			system.updateEntity(e);
 		}
 	}
 	
@@ -104,21 +163,21 @@ class EntityWorld
 	 * @param	system
 	 */
 	
-	public function removeSystem( system:IEntitySystem ):Void
+	public function removeSystem(system:IEntitySystem):Void
 	{
-		systems.remove( system );
+		systems.remove(system);
 		system.world = null;
 	}
 	
-	@:generic public function getContext <T:(Constructable, Context)> ( id:String, ContextType:Class<T>):T
+	@:generic public function getContext <T:(Constructable, Context)> (id:String, ContextType:Class<T>):T
 	{
-		if ( contexts.exists(id) ) return contexts.get( id );
+		if (contexts.exists(id)) return contexts.get(id);
 		else
 		{
 			var context = new T();
-			contexts.set( id, context );
+			contexts.set(id, context);
 			
-			context.onCreated( this );
+			context.onCreated(this);
 			
 			return context;
 		}
@@ -129,11 +188,11 @@ class EntityWorld
 	 * @param	e
 	 */
 	
-	public function updateEntity( e:Entity ):Void
+	public inline function updateEntity(e:Entity):Void
 	{
-		for ( system in systems )
+		for (system in systems)
 		{
-			system.updateEntity( e );
+			system.updateEntity(e);
 		}
 	}
 	
@@ -141,7 +200,7 @@ class EntityWorld
 	 * Destroys all entities!
 	 */
 	
-	public function destroyEntities():Void
+	public inline function destroyEntities():Void
 	{
 		entityManager.destroyAll();
 	}
@@ -154,7 +213,7 @@ class EntityWorld
 	{
 		WORLDS[worldId] = null;
 		
-		for ( system in systems )
+		for (system in systems)
 		{
 			system.destroy();
 			system = null;
@@ -170,9 +229,9 @@ class EntityWorld
 	 * @param	e
 	 */
 	
-	public function destroyEntity( e:Entity ):Void
+	public inline function destroyEntity(e:Entity):Void
 	{
-		entityManager.destroy( e );
+		entityManager.destroy(e);
 	}
 	
 	/**

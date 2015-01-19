@@ -21,7 +21,7 @@ class Entity
 	 * @param	id A unique id for this Entity.
 	 */
 	
-	public function new( id:Int, world:EntityWorld) 
+	public function new(id:Int, world:EntityWorld) 
 	{
 		this.id = id;
 		this.world = world;
@@ -52,9 +52,9 @@ class Entity
 	 * Call this everytime you change this entity's components!
 	 */
 	
-	public function update():Void
+	public inline function update():Void
 	{
-		world.updateEntity( this);
+		world.updateEntity(this);
 	}
 	
 	/**
@@ -62,7 +62,7 @@ class Entity
 	 * @param	component The component to add.
 	 */
 	
-	public function addComponent( component:Component):Void
+	public inline function addComponent(component:Component):Void
 	{
 		world.componentManager.addComponent( this, component);
 	}
@@ -73,7 +73,7 @@ class Entity
 	 * @return true if it has this component class
 	 */
 	
-	public function hasComponent( componentClass:Class<Component>):Bool
+	public inline function hasComponent(componentClass:Class<Component>):Bool
 	{
 		return world.componentManager.hasComponentClass( this, componentClass);
 	}
@@ -84,7 +84,7 @@ class Entity
 	 * @return true if it has this component type
 	 */
 	
-	public function hasComponentType( type:IComponentType):Bool
+	public inline function hasComponentType(type:IComponentType):Bool
 	{
 		return world.componentManager.hasComponentType( this, type);
 	}
@@ -94,9 +94,9 @@ class Entity
 	 * @return
 	 */
 	
-	public function getComponentIterator():List<Component>
+	public inline function getComponentIterator():List<Component>
 	{
-		return world.componentManager.getComponents( this );
+		return world.componentManager.getComponents(this);
 	}
 	
 	/**
@@ -105,12 +105,12 @@ class Entity
 	 * @return
 	 */
 	
-	public function getComponent( componentClass:Class<Component>):Component
+	public inline function getComponent(componentClass:Class<Component>):Component
 	{
 		return world.componentManager.getComponentByClass( this, componentClass);
 	}
 	
-	public function getComponentByType( componentType:IComponentType):Component
+	public inline function getComponentByType(componentType:IComponentType):Component
 	{
 		return world.componentManager.getComponentByType( this, componentType);
 	}
@@ -120,7 +120,7 @@ class Entity
 	 * @param	component
 	 */
 	
-	public function removeComponent( component:Component ):Void
+	public inline function removeComponent(component:Component):Void
 	{
 		world.componentManager.removeComponentByClass( this, Type.getClass( component));
 	}
@@ -130,12 +130,12 @@ class Entity
 	 * @param	componentClass
 	 */
 	
-	public function removeComponentByClass( componentClass:Class<Component> ):Void
+	public inline function removeComponentByClass(componentClass:Class<Component>):Void
 	{
 		world.componentManager.removeComponentByClass( this, componentClass);
 	}
 	
-	public function removeComponentByType( componentType:IComponentType ):Void
+	public inline function removeComponentByType(componentType:IComponentType):Void
 	{
 		world.componentManager.removeComponentByType( this, componentType);
 	}
@@ -145,9 +145,9 @@ class Entity
 	 * @param	component
 	 */
 	
-	public function deleteComponent( component:Component ):Void
+	public inline function deleteComponent(component:Component ):Void
 	{
-		world.componentManager.deleteComponentByClass( this, Type.getClass( component));
+		world.componentManager.deleteComponentByClass(this, Type.getClass( component));
 	}
 	
 	/**
@@ -155,12 +155,12 @@ class Entity
 	 * @param	componentClass
 	 */
 	
-	public function deleteComponentByClass( componentClass:Class<Component> ):Void
+	public inline function deleteComponentByClass(componentClass:Class<Component> ):Void
 	{
 		world.componentManager.deleteComponentByClass( this, componentClass);
 	}
 	
-	public function deleteComponentByType( componentType:IComponentType ):Void
+	public inline function deleteComponentByType(componentType:IComponentType ):Void
 	{
 		world.componentManager.deleteComponentByType( this, componentType);
 	}
@@ -170,9 +170,14 @@ class Entity
 	 * @param	tag the id.
 	 */
 	
-	public function setTag( tag:String):Void
+	public inline function setTag(tag:String):Void
 	{
-		world.tags.set( id, tag);
+		world.setTag(this, tag);
+	}
+	
+	public inline function removeTag():Void
+	{
+		world.removeTag(this);
 	}
 	
 	/**
@@ -180,18 +185,18 @@ class Entity
 	 * @return returns null if it has not been tagged!
 	 */
 	
-	public function getTag():String
+	public inline function getTag():String
 	{
-		return world.tags.get( id);
+		return world.getTag(this);
 	}
 	
 	/**
 	 * Destroy this entity!
 	 */
 	
-	public function destroy():Void
+	public inline function destroy():Void
 	{
-		world.destroyEntity( this);
+		world.destroyEntity(this);
 	}
 	
 	/**

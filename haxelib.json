@@ -1,0 +1,12 @@
+{
+  "name": "hxE",
+  "url": "https://github.com/PDeveloper/hxE",
+  "license": "MIT",
+  "tags": ["entity","system","cross"],
+  "description": "A Haxe Entity System based on the Artemis ES: http://gamadu.com/artemis/\n    Read up on Entity systems: http://t-machine.org/index.php/2007/09/03/entity-systems-are-the-future-of-mmog-development-part-1/",
+  "version": "0.0.1",
+  "releasenote": "Initial Haxelib2 release",
+  "contributors": ["PSvils"],
+  "classPath" : "src"
+  }
+}

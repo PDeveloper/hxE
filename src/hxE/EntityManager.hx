@@ -21,7 +21,7 @@ class EntityManager
 	
 	private var world:EntityWorld;
 	
-	public function new( world:EntityWorld) 
+	public function new(world:EntityWorld) 
 	{
 		freeEnt = new GenericStack<Entity>();
 		usedEnt = new GenericStack<Entity>();
@@ -38,29 +38,20 @@ class EntityManager
 		return nid;
 	}
 	
-	public function destroyAll():Void
+	public inline function destroyAll():Void
 	{
-		for ( e in usedEnt )
-		{
-			destroy( e );
-		}
+		for (e in usedEnt) destroy(e);
 	}
 	
 	public function create():Entity
 	{
 		var e:Entity;
-		if ( freeEnt.isEmpty())
-		{
-			e = new Entity( getNextId(), world);
-		}
-		else
-		{
-			e = freeEnt.pop();
-		}
+		if (freeEnt.isEmpty()) e = new Entity(getNextId(), world);
+		else e = freeEnt.pop();
 		
 		e.activate();
 		
-		usedEnt.add( e);
+		usedEnt.add(e);
 		
 		return e;
 	}
@@ -70,20 +61,22 @@ class EntityManager
 		return usedEnt.list();
 	}
 	
-	public function destroy( e:Entity ):Void
+	public function destroy(e:Entity):Void
 	{
+		world.removeTag(e);
+		
 		var components = e.getComponentIterator();
 		
-		for ( component in components)
+		for (component in components)
 		{
-			e.removeComponent( component);
+			e.removeComponent(component);
 		}
 		
 		e.update();
 		e.deactivate();
 		
-		usedEnt.remove( e);
-		freeEnt.add( e);
+		usedEnt.remove(e);
+		freeEnt.add(e);
 	}
 	
 }

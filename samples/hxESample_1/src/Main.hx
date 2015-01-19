@@ -39,67 +39,67 @@ class Main extends Sprite
 		// Create the systems we'll be using
 		displaySystem = new DisplaySystem();
 		targetSystem = new TargetSystem();
-		retargetSystem = new RetargetSystem( new Rectangle( 0.0, 0.0, 800.0, 600.0));
+		retargetSystem = new RetargetSystem(new Rectangle( 0.0, 0.0, 800.0, 600.0));
 		
 		// Add the systems to the EntityWorld
-		world.addSystem( displaySystem);
-		world.addSystem( targetSystem);
-		world.addSystem( retargetSystem);
+		world.addSystem(displaySystem);
+		world.addSystem(targetSystem);
+		world.addSystem(retargetSystem);
 		
 		// Add the display systems container so we can see something
-		addChild( displaySystem.getContainer());
+		addChild(displaySystem.getContainer());
 		
-		if ( stage == null) addEventListener( Event.ADDED_TO_STAGE, init);
+		if (stage == null) addEventListener(Event.ADDED_TO_STAGE, init);
 		else init();
 	}
 	
-	private function init( e:Event = null):Void
+	private function init(e:Event = null):Void
 	{
-		if ( e != null) removeEventListener( Event.ADDED_TO_STAGE, init);
+		if (e != null) removeEventListener(Event.ADDED_TO_STAGE, init);
 		
 		// Create 100 entities.
-		for ( i in 0...100)
+		for (i in 0...100)
 		{
 			var e = world.create();
 			
 			var graphic:Sprite = new Sprite();
 			
 			var g = graphic.graphics;
-			g.beginFill( Std.int( Math.random() * 2147483647), 1.0);
+			g.beginFill( Std.int(Math.random() * 2147483647), 1.0);
 			
 			var blockWidth:Float = Math.random() * 20.0 + 10.0;
 			var blockHeight:Float = Math.random() * 20.0 + 10.0;
 			
-			g.drawRect( blockWidth * -0.5, blockHeight * -0.5, blockWidth, blockHeight);
+			g.drawRect(blockWidth * -0.5, blockHeight * -0.5, blockWidth, blockHeight);
 			
-			var display = new DisplayComponent( graphic);
-			var transform = new TransformComponent( Math.random() * stage.stageWidth,
+			var display = new DisplayComponent(graphic);
+			var transform = new TransformComponent(Math.random() * stage.stageWidth,
 													Math.random() * stage.stageHeight,
 													Math.random() * 360.0
 			);
-			var target = new TargetComponent( Math.random() * stage.stageWidth,
+			var target = new TargetComponent(Math.random() * stage.stageWidth,
 												Math.random() * stage.stageHeight
 			);
 			
 			// Add the components
-			e.addComponent( display);
-			e.addComponent( transform);
-			e.addComponent( target);
+			e.addComponent(display);
+			e.addComponent(transform);
+			e.addComponent(target);
 			
 			// MUST update the entity after adding or removing components!!!
 			e.update();
 		}
 		
 		timeStep = Timer.stamp();
-		addEventListener( Event.ENTER_FRAME, enterFrame);
+		addEventListener(Event.ENTER_FRAME, enterFrame);
 	}
 	
-	private function enterFrame( e:Event):Void
+	private function enterFrame(e:Event):Void
 	{
 		timeStep = Timer.stamp() - timeStep;
 		
 		// Update the systems. You can give whichever timestep you want (seconds or milliseconds), since it's up to you to use the timestep in your own systems.
-		world.updateSystems( timeStep);
+		world.updateSystems(timeStep);
 		
 		timeStep = Timer.stamp();
 	}
@@ -111,7 +111,7 @@ class Main extends Sprite
 		stage.align = StageAlign.TOP_LEFT;
 		// entry point
 		
-		Lib.current.addChild( new Main());
+		Lib.current.addChild(new Main());
 	}
 	
 }
